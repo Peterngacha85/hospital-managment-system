@@ -1,0 +1,189 @@
+const mongoose = require('mongoose');
+
+// Clinic Schema
+const clinicSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true
+  },
+  address: {
+    type: String,
+    required: true
+  },
+  phone: {
+    type: String,
+    required: true
+  }
+});
+
+// Doctor Schema
+const doctorSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true
+  },
+  specialization: {
+    type: String,
+    required: true
+  },
+  phone: {
+    type: String,
+    required: true
+  },
+  email: {
+    type: String,
+    required: true
+  },
+  clinic_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Clinic',
+    required: true
+  }
+});
+
+// Chronic Disease Schema
+const chronicDiseaseSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true
+  },
+  description: {
+    type: String,
+    required: true
+  }
+});
+
+// Patient Schema
+const patientSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true
+  },
+  dob: {
+    type: Date,
+    required: true
+  },
+  gender: {
+    type: String,
+    required: true
+  },
+  phone: {
+    type: String,
+    required: true
+  },
+  email: {
+    type: String,
+    required: true
+  },
+  chronic_disease_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'ChronicDisease',
+    required: false
+  }
+});
+
+// Booking Schema
+const bookingSchema = new mongoose.Schema({
+  patient_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Patient',
+    required: true
+  },
+  doctor_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Doctor',
+    required: true
+  },
+  clinic_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Clinic',
+    required: true
+  },
+  booking_date: {
+    type: Date,
+    required: true
+  },
+  status: {
+    type: String,
+    required: true,
+    enum: ['Pending', 'Confirmed', 'Cancelled']
+  }
+});
+
+// Appointment Schema
+const appointmentSchema = new mongoose.Schema({
+  booking_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Booking',
+    required: true
+  },
+  appointment_date: {
+    type: Date,
+    required: true
+  },
+  status: {
+    type: String,
+    required: true,
+    enum: ['Scheduled', 'Completed', 'No-Show']
+  }
+});
+
+// Medicine Schema
+const medicineSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true
+  },
+  description: {
+    type: String,
+    required: true
+  },
+  dose: {
+    type: String,
+    required: true
+  }
+});
+
+// Patient Medicine Schema (Junction collection for prescriptions)
+const patientMedicineSchema = new mongoose.Schema({
+  patient_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Patient',
+    required: true
+  },
+  medicine_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Medicine',
+    required: true
+  },
+  prescription_date: {
+    type: Date,
+    required: true
+  },
+  dose: {
+    type: String,
+    required: true
+  }
+});
+
+// Models
+const Clinic = mongoose.model('Clinic', clinicSchema);
+const Doctor = mongoose.model('Doctor', doctorSchema);
+const ChronicDisease = mongoose.model('ChronicDisease', chronicDiseaseSchema);
+const Patient = mongoose.model('Patient', patientSchema);
+const Booking = mongoose.model('Booking', bookingSchema);
+const Appointment = mongoose.model('Appointment', appointmentSchema);
+const Medicine = mongoose.model('Medicine', medicineSchema);
+const PatientMedicine = mongoose.model('PatientMedicine', patientMedicineSchema);
+
+module.exports = {
+  Clinic,
+  Doctor,
+  ChronicDisease,
+  Patient,
+  Booking,
+  Appointment,
+  Medicine,
+  PatientMedicine
+};
+
